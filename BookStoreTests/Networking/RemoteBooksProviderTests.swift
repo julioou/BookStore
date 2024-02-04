@@ -1,5 +1,4 @@
 import XCTest
-
 @testable import BookStore
 
 final class RemoteBooksProviderTests: XCTestCase {
@@ -7,11 +6,11 @@ final class RemoteBooksProviderTests: XCTestCase {
     func test_books_should_callWith_definedURL() throws {
         let networkingClientSpy = NetworkingClientSpy()
         let sut = RemoteBooksProvider(httpGetClient: networkingClientSpy)
-        let expectedUrl = RemoteBooksProvider.Endpoint.baseUrl
+        let expectedUrl = URL(string: RemoteBooksProvider.Endpoint.baseUrl + "1")
 
         Task {
-            try await sut.books(index: 8)
-            XCTAssertEqual(networkingClientSpy.url, expectedUrl + String(8))
+            let _ = try await sut.books(index: 8)
+            XCTAssertEqual(networkingClientSpy.url, expectedUrl)
         }
     }
 

@@ -1,6 +1,6 @@
 import Foundation
 import Combine
-
+import os
 
 class HomeViewModel: ObservableObject {
     private enum Constants {
@@ -24,7 +24,7 @@ class HomeViewModel: ObservableObject {
                     self.books += model
                 }
             } catch {
-                
+                Logger().error("Error fetching data")
             }
         }
     }

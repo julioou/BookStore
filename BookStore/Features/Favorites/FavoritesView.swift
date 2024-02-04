@@ -12,30 +12,37 @@ struct FavoritesView: View {
         static let defaultSpacing: CGFloat = 30
     }
 
+    @Environment(\.managedObjectContext) var storageManager
+
+    @EnvironmentObject var router: Router
     @StateObject var viewModel = FavoritesViewModel()
-
-    var columns = [GridItem(), GridItem()]
-
-    @State var favorited = false
+    
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Book.title, ascending: true)],
+        animation: .default)
+    private var storedBooks: FetchedResults<Book>
 
     var body: some View {
         VStack(spacing: .zero) {
             ScrollView {
-                LazyVGrid(columns: columns,
-                          spacing: Constants.defaultSpacing) {
-//                    ForEach(books) { book in
-//                        CardView(title: book.title, favorited: favorited)
-//                            .onTapGesture {
-//                                favorited.toggle()
-//                            }
-//                    }
+                ForEach(viewModel.books) { book in
+                    FavoritesCardView(title: book.title,
+                                      imageUrl: book.imageUrl)
+                    .onTapGesture {
+                        router.navigate(to: .detail(bookInfo: book))
+                    }
                 }
-                .padding()
-            }.background(Color(.home))
-        }.background(Color(.homeLight))
+            }
+            .background(Color(.home))
+        }
+        .background(Color(.homeLight))
+        .onAppear {
+            viewModel.updateFavorites(with: storedBooks)
+        }
     }
 }
 
 #Preview {
-    FavoritesView()
+    FavoritesView().environment(\.managedObjectContext,
+                                 StorageManager.preview.viewContext)
 }

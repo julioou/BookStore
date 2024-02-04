@@ -1,6 +1,13 @@
 import CoreData
 
-struct StorageManager {
+//protocol StorageProtocol {
+//    func add(_ book: BookModel)
+//    func remove(_ book: BookModel)
+//    func contains(_ book: BookModel)
+//}
+
+class StorageManager: ObservableObject {
+    
     let container: NSPersistentContainer
 
     static let shared = StorageManager()
@@ -51,4 +58,37 @@ struct StorageManager {
             }
         }
     }
+
+    func deleteAllData() {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "MainStorage")
+        fetchRequest.returnsObjectsAsFaults = false
+        do {
+            let results = try viewContext.fetch(fetchRequest)
+            for object in results {
+                guard let objectData = object as? NSManagedObject else {continue}
+                viewContext.delete(objectData)
+            }
+        } catch let error {
+            print("Detele all data in MainStorage error :", error)
+        }
+    }
 }
+
+//extension StorageManager: StorageProtocol {
+//
+//    func add(_ book: BookModel) {
+//        objectWillChange.send()
+//        book.insert(resort.id)
+//        saveContext()
+//    }
+//    
+//    func remove(_ book: BookModel) {
+//        objectWillChange.send()
+//        book.remove(resort.id)
+//                saveContext()
+//    }
+//    
+//    func contains(_ book: BookModel) -> BookModel {
+//        book.contains(resort.id)
+//    }
+//}

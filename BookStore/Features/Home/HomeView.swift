@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct Home: View {
+struct HomeView: View {
     
     private struct Constants {
         static let headerTitle = "Book Store"
@@ -42,7 +42,6 @@ struct Home: View {
                           spacing: Constants.defaultSpacing) {
                     ForEach(viewModel.books) { book in
                         CardView(title: book.title,
-                                 favorited: book.isFavorited,
                                  imageUrl: book.imageUrl)
                         .onAppear {
                             viewModel.fetchBooksIfNeeded(for: book)
@@ -63,6 +62,6 @@ struct Home: View {
 
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
-        Home()
+        HomeView()
     }
 }

@@ -16,14 +16,18 @@ struct BookStoreApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack(path: $router.navPath) {
-                Home()
+                HomeView()
                     .environment(\.managedObjectContext, storageManager.viewContext)
                     .navigationDestination(for: Router.Destination.self) { destination in
                         switch destination {
                         case .favorites:
                             FavoritesView()
+                                .environment(\.managedObjectContext,
+                                              storageManager.viewContext)
                         case .detail(let bookDetail):
                             DetailView(book: bookDetail)
+                                .environment(\.managedObjectContext,
+                                              storageManager.viewContext)
                         }
                     }
             }
